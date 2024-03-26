@@ -42,6 +42,7 @@ const user_text               = document.getElementById('user_text')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
+
 /* Launch Progress Wrapper Functions */
 
 /**
@@ -614,7 +615,7 @@ async function dlAsync(login = true) {
 
             setLaunchDetails(Lang.queryJS('landing.dlAsync.doneEnjoyServer'))
 
-            // Init Discord Hook
+            // Init Discord Hook            
             if(distro.rawDistribution.discord != null && serv.rawServer.discord != null){
                 DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
                 hasRPC = true
