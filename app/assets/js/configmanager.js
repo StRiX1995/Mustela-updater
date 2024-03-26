@@ -2,14 +2,14 @@ const fs   = require('fs-extra')
 const { LoggerUtil } = require('helios-core')
 const os   = require('os')
 const path = require('path')
+const remote = require('@electron/remote')
 
 const logger = LoggerUtil.getLogger('ConfigManager')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
-const launcherDir = require('@electron/remote').app.getPath('userData')
-
-const dataPath = path.join(launcherDir, '.helioslauncher')
+const launcherDir = remote.app.getPath('userData')
+const dataPath = path.join(remote.app.getAppPath(), '.minecraft')
 
 const MD5 = require('crypto-js/md5');
 
