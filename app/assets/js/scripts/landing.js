@@ -42,6 +42,10 @@ const user_text               = document.getElementById('user_text')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
+// Keep reference to Minecraft Process
+let proc
+// Is DiscordRPC enabled
+let hasRPC = false
 
 /* Launch Progress Wrapper Functions */
 
@@ -150,7 +154,9 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.uuid}/right')`
+            console.log(authUser.displayName)
+            // document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.uuid}/right')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.displayName}/right')` // использование ника вместо uuid для подтягивания картинки скина
         }
     }
     user_text.innerHTML = username
@@ -436,10 +442,7 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
 
 }
 
-// Keep reference to Minecraft Process
-let proc
-// Is DiscordRPC enabled
-let hasRPC = false
+
 // Joined server regex
 // Change this if your server uses something different.
 const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
@@ -559,7 +562,18 @@ async function dlAsync(login = true) {
         setLaunchDetails(Lang.queryJS('landing.dlAsync.launchingGame'))
 
         // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
-        const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
+        // const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
+        
+        // [Netty Local Client IO #0/INFO] [ne.mi.ne.NetworkHooks/]: Connected to a modded server.
+        // const INTERNAL_SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: Connected to `) // Что бы было
+        
+        // [Minecraft] [08:02:08] [Render thread/INFO] [minecraft/ConnectScreen]: Connecting to localhost, 25565
+        // const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: Connecting to `) // Потому что у нас сервер не пишет вход себя 
+        const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: Connected to `) // Что бы было
+
+        // [21:03:36] [Render thread/INFO] [me.je.fo.st.ClientLifecycleHandler/]: Stopping JEI
+        const QUIT_SERVER_REGEX = new RegExp(`\\[.+\\]: Stopping JEI `) // Хуярим выход
+
 
         const onLoadComplete = () => {
             toggleLaunchArea(false)
@@ -589,12 +603,15 @@ async function dlAsync(login = true) {
 
         // Listener for Discord RPC.
         const gameStateChange = function(data){
+            console.log(data)
             data = data.trim()
             if(SERVER_JOINED_REGEX.test(data)){
                 DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joined'))
-            } else if(GAME_JOINED_REGEX.test(data)){
+                DiscordWrapper.updateTimestamp()
+            } else if(GAME_JOINED_REGEX.test(data) || QUIT_SERVER_REGEX.test(data)){
                 DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joining'))
-            }
+                DiscordWrapper.updateTimestamp()
+            } 
         }
 
         const gameErrorListener = function(data){
@@ -620,10 +637,15 @@ async function dlAsync(login = true) {
                 DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
                 hasRPC = true
                 proc.on('close', (code, signal) => {
-                    loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
-                    DiscordWrapper.shutdownRPC()
-                    hasRPC = false
-                    proc = null
+                    console.log("minecraft was terminated")
+                    DiscordWrapper.updateDetails(Lang.queryJS('discord.inMainMenu'))
+                    DiscordWrapper.updateState(Lang.queryJS('discord.stateInMainMenu'))
+                    DiscordWrapper.updateSmallImageKey(Lang.queryJS('discord.stateInMainMenuIcon'))
+                    // ! Don't shutdown discord api
+                    // loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
+                    // DiscordWrapper.shutdownRPC()
+                    // hasRPC = false
+                    // proc = null
                 })
             }
 

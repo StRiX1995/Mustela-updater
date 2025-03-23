@@ -9,8 +9,13 @@ const Lang = require('./langloader')
 
 let client
 let activity
+let firstStart = true
 
 exports.initRPC = function(genSettings, servSettings, initialDetails = Lang.queryJS('discord.waiting')){
+    if (!firstStart) {
+        exports.shutdownRPC()
+        firstStart = false
+    } 
     client = new Client({ transport: 'ipc' })
 
     activity = {
@@ -40,6 +45,22 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = Lang.quer
 
 exports.updateDetails = function(details){
     activity.details = details
+    client.setActivity(activity)
+}
+
+exports.updateState = function(state){
+    activity.state = state
+    activity.startTimestamp = new Date().getTime()
+    client.setActivity(activity)
+}
+
+exports.updateTimestamp = function(){
+    activity.startTimestamp = new Date().getTime()
+    client.setActivity(activity)
+}
+
+exports.updateSmallImageKey = function(imageKey){
+    activity.smallImageKey = imageKey
     client.setActivity(activity)
 }
 

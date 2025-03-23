@@ -36,7 +36,7 @@ exports.setupLanguage = function(){
     // Load Language Files
     exports.loadLanguage('en_US')
     // ru Language File
-    // exports.loadLanguage('ru_RU')
+    exports.loadLanguage('ru_RU')
     // Uncomment this when translations are ready
     //exports.loadLanguage('xx_XX')
 

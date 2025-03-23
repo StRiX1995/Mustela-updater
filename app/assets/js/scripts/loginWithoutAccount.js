@@ -17,7 +17,7 @@ const loginWAButton           = document.getElementById('loginWithoutButton')
 
 // Emphasize errors with shake when focus is lost.
 loginWAUsername.addEventListener('focusout', (e) => {
-    if(e.target.value != "") {
+    if(e.target.value != '') {
         loginWADisabled(false)
     } else {
         loginWADisabled(true)
@@ -26,7 +26,7 @@ loginWAUsername.addEventListener('focusout', (e) => {
 
 // Validate input for each field.
 loginWAUsername.addEventListener('input', (e) => {
-    if(e.target.value != "") {
+    if(e.target.value != '') {
         loginWADisabled(false)
     } else {
         loginWADisabled(true)

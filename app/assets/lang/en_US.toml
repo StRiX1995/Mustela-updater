@@ -46,7 +46,7 @@ loginButtonText = "JOIN"
 loginOptionsTitle = "Login Options"
 loginWithMicrosoft = "Login with Microsoft"
 loginWithMojang = "Login with Mojang"
-loginWithoutAccount = "Login without account"
+loginWithoutAccount = "Join with username"
 cancelButton = "Cancel"
 
 [ejs.overlay]
@@ -73,6 +73,7 @@ microsoftAccount = "Microsoft"
 addMicrosoftAccount = "+ Add Microsoft Account"
 mojangAccount = "Mojang"
 addMojangAccount = "+ Add Mojang Account"
+addFreeAccount = "+ Join with username"
 minecraftTabHeaderText = "Minecraft Settings"
 minecraftTabHeaderDesc = "Options related to game launch."
 gameResolutionTitle = "Game Resolution"
@@ -142,6 +143,11 @@ continueButton = "CONTINUE"
 [js.discord]
 waiting = "Waiting for Client.."
 state = "Server: {shortId}"
+inSettings = "broke client :("
+stateInSettings = "In settings"
+inMainMenu = "Reading news"
+stateInMainMenu = "In main menu"
+stateInMainMenuIcon = "mainmenu"
 
 [js.index]
 microsoftLoginTitle = "Microsoft Login"

@@ -351,6 +351,14 @@ document.getElementById('settingsAddMojangAccount').onclick = (e) => {
     })
 }
 
+document.getElementById('settingsAddFreeAccount').onclick = (e) => {
+    switchView(getCurrentView(), VIEWS.loginWithoutAccount, 500, 500, () => {
+        loginViewOnSuccess = loginOptionsViewOnLoginSuccess
+        loginViewOnCancel = loginOptionsViewOnLoginCancel
+        loginWACancelEnabled(true)
+    }) 
+}
+
 // Bind the add microsoft account button.
 document.getElementById('settingsAddMicrosoftAccount').onclick = (e) => {
     switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
@@ -538,29 +546,29 @@ function processLogOut(val, isLastAccount){
         })
     } else {
         AuthManager.removeMicrosoftAccount(uuid)
-        .then(() => {
-            if(!isLastAccount && uuid === prevSelAcc.uuid){
-                const selAcc = ConfigManager.getSelectedAccount()
-                refreshAuthAccountSelected(selAcc.uuid)
-                updateSelectedAccount(selAcc)
-                validateSelectedAccount()
-            }
-            if(isLastAccount) {
-                loginOptionsCancelEnabled(false)
-                loginOptionsViewOnLoginSuccess = VIEWS.settings
-                loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                switchView(getCurrentView(), VIEWS.loginOptions)
-            }
-            if(msAccDomElementCache) {
-                msAccDomElementCache.remove()
-                msAccDomElementCache = null
-            }
-        })
-        .finally(() => {
-            if(!isLastAccount) {
-                switchView(getCurrentView(), VIEWS.settings, 500, 500)
-            }
-        })
+            .then(() => {
+                if(!isLastAccount && uuid === prevSelAcc.uuid){
+                    const selAcc = ConfigManager.getSelectedAccount()
+                    refreshAuthAccountSelected(selAcc.uuid)
+                    updateSelectedAccount(selAcc)
+                    validateSelectedAccount()
+                }
+                if(isLastAccount) {
+                    loginOptionsCancelEnabled(false)
+                    loginOptionsViewOnLoginSuccess = VIEWS.settings
+                    loginOptionsViewOnLoginCancel = VIEWS.loginOptions
+                    switchView(getCurrentView(), VIEWS.loginOptions)
+                }
+                if(msAccDomElementCache) {
+                    msAccDomElementCache.remove()
+                    msAccDomElementCache = null
+                }
+            })
+            .finally(() => {
+                if(!isLastAccount) {
+                    switchView(getCurrentView(), VIEWS.settings, 500, 500)
+                }
+            })
     }
 }
 
@@ -665,7 +673,8 @@ function populateAuthAccounts(){
 
         const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
             <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://mc-heads.net/body/${acc.uuid}/60">
+                <!-- <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://mc-heads.net/body/${acc.uuid}/60"> -->
+                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://mc-heads.net/body/${acc.displayName}/60">
             </div>
             <div class="settingsAuthAccountRight">
                 <div class="settingsAuthAccountDetails">
